@@ -118,4 +118,7 @@ const styles2 = StyleSheet.create({
     },
 });
 
-ReactDOM.render(<StyleTester/>, document.getElementById('root'));
+StyleSheet.startBuffering();
+ReactDOM.render(<StyleTester/>,
+                document.getElementById('root'),
+                StyleSheet.flush);

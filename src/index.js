@@ -17,6 +17,10 @@ const injectStyles = (cssContents) => {
     head.appendChild(style);
 };
 
+const classNameAlreadyInjected = {};
+let injectionBuffer = "";
+let injectionMode = 'IMMEDIATE';
+
 const StyleSheet = {
     create(sheetDefinition) {
         return mapObj(sheetDefinition, ([key, val]) => {
@@ -31,20 +35,34 @@ const StyleSheet = {
         });
     },
 
-    css: (function() {
-        const classNameAlreadyInjected = {};
-        return (styleDefinitions) => {
-            const className = styleDefinitions.map(s => s._name).join("-o_O-");
-            if (!classNameAlreadyInjected[className]) {
-                const generated = generateCSS(
-                    `.${className}`,
-                    styleDefinitions.map(d => d._definition));
-                injectStyles(generated);
-                classNameAlreadyInjected[className] = true;
-            }
-            return className;
+    startBuffering() {
+        injectionMode = 'BUFFER';
+    },
+
+    flush() {
+        if (injectionMode !== 'BUFFER' || injectionBuffer.length === 0) {
+            return;
         }
-    })()
+        injectStyles(injectionBuffer);
+        injectionMode = 'IMMEDIATE';
+        injectionBuffer = "";
+    },
+
+    css(styleDefinitions) {
+        const className = styleDefinitions.map(s => s._name).join("-o_O-");
+        if (!classNameAlreadyInjected[className]) {
+            const generated = generateCSS(
+                `.${className}`,
+                styleDefinitions.map(d => d._definition));
+            if (injectionMode === 'BUFFER') {
+                injectionBuffer += generated;
+            } else {
+                injectStyles(generated);
+            }
+            classNameAlreadyInjected[className] = true;
+        }
+        return className;
+    }
 };
 
 export default StyleSheet;
