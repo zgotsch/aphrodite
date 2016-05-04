@@ -7,7 +7,7 @@
     "react",
     "inline-styles"
   ],
-  "main": "lib/index.js",
+  "main": "dist/aphrodite.js",
   "scripts": {
     "test": "mocha --compilers js:babel/register tests",
     "test:watch": "mocha --watch --compilers js:babel/register tests",
