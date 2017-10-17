@@ -6,7 +6,7 @@ import {generateCSS} from './generate';
 import {hashObject, hashString} from './util';
 
 /* ::
-import type { SheetDefinition, SheetDefinitions } from './index.js';
+import type { SheetDefinition, SheetDefinitions } from './exports.js';
 import type { MaybeSheetDefinition } from './exports.js';
 import type { SelectorHandler } from './generate.js';
 type ProcessedStyleDefinitions = {

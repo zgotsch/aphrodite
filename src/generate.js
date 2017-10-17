@@ -12,7 +12,7 @@ import {
 const prefixAll = createPrefixer(staticData);
 
 /* ::
-import type { SheetDefinition } from './index.js';
+import type { SheetDefinition } from './exports.js';
 type StringHandlers = { [id:string]: Function };
 type SelectorCallback = (selector: string) => any;
 export type SelectorHandler = (
@@ -164,7 +164,7 @@ export const generateCSS = (
         const foundHandler = selectorHandlers.some(handler => {
             const result = handler(key, selector, (newSelector) => {
                 return generateCSS(
-                    newSelector, [val], selectorHandlers,
+                    newSelector, ([val]/* : any */), selectorHandlers,
                     stringHandlers, useImportant);
             });
             if (result != null) {

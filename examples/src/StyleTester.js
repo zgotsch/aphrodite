@@ -39,6 +39,7 @@ const StyleTester = React.createClass({
             <div className={css(styles.flexCenter)}><div className={css(styles.flexInner)}>This should be centered inside the outer box, even in IE 10.</div></div>,
             <span className={css(styles.singleAnimation)}>This should animate from side to side</span>,
             <span className={css(styles.doubleAnimation)}>This should animate from side to side, as well as fade in</span>,
+            // <span className={css(styles.doesNotExist)}>This should animate from side to side, as well as fade in</span>,
         ];
 
         return <div>

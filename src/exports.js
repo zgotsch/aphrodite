@@ -14,11 +14,21 @@ type RenderFunction = () => string;
 type Extension = {
     selectorHandler: SelectorHandler
 };
+export type SheetEntry = {|
+  _len: number,
+  _name: string,
+  _definition: any,
+|};
 export type MaybeSheetDefinition = SheetDefinition | false | null | void
+
+// A type-level function that describes stylesheet creation
+// This is type-level identity, but it should be parameterized over the
+// definition type
+type CreateStylesheet = <T>(T) => SheetEntry;
 */
 
 const StyleSheet = {
-    create(sheetDefinition /* : SheetDefinition */) {
+    create/*::<T: {}> */(sheetDefinition /* : T */)/* : $ObjMap<T, CreateStylesheet> */ {
         return mapObj(sheetDefinition, ([key, val]) => {
             const stringVal = JSON.stringify(val);
             return [key, {
@@ -93,40 +103,41 @@ const makeExports = (
     useImportant /* : boolean */,
     selectorHandlers /* : SelectorHandler[] */
 ) => {
-    return {
-        StyleSheet: {
-            ...StyleSheet,
+    const styleSheet = {
+        ...StyleSheet,
 
-            /**
-             * Returns a version of the exports of Aphrodite (i.e. an object
-             * with `css` and `StyleSheet` properties) which have some
-             * extensions included.
-             *
-             * @param {Array.<Object>} extensions: An array of extensions to
-             *     add to this instance of Aphrodite. Each object should have a
-             *     single property on it, defining which kind of extension to
-             *     add.
-             * @param {SelectorHandler} [extensions[].selectorHandler]: A
-             *     selector handler extension. See `defaultSelectorHandlers` in
-             *     generate.js.
-             *
-             * @returns {Object} An object containing the exports of the new
-             *     instance of Aphrodite.
-             */
-            extend(extensions /* : Extension[] */) {
-                const extensionSelectorHandlers = extensions
-                    // Pull out extensions with a selectorHandler property
-                    .map(extension => extension.selectorHandler)
-                    // Remove nulls (i.e. extensions without a selectorHandler
-                    // property).
-                    .filter(handler => handler);
+        /**
+         * Returns a version of the exports of Aphrodite (i.e. an object
+         * with `css` and `StyleSheet` properties) which have some
+         * extensions included.
+         *
+         * @param {Array.<Object>} extensions: An array of extensions to
+         *     add to this instance of Aphrodite. Each object should have a
+         *     single property on it, defining which kind of extension to
+         *     add.
+         * @param {SelectorHandler} [extensions[].selectorHandler]: A
+         *     selector handler extension. See `defaultSelectorHandlers` in
+         *     generate.js.
+         *
+         * @returns {Object} An object containing the exports of the new
+         *     instance of Aphrodite.
+         */
+        extend(extensions /* : Extension[] */) {
+            const extensionSelectorHandlers = extensions
+                // Pull out extensions with a selectorHandler property
+                .map(extension => extension.selectorHandler)
+                // Remove nulls (i.e. extensions without a selectorHandler
+                // property).
+                .filter(handler => handler);
 
-                return makeExports(
-                    useImportant,
-                    selectorHandlers.concat(extensionSelectorHandlers)
-                );
-            },
+            return makeExports(
+                useImportant,
+                selectorHandlers.concat(extensionSelectorHandlers)
+            );
         },
+    };
+    return {
+        StyleSheet: styleSheet,
 
         StyleSheetServer,
         StyleSheetTestUtils,

@@ -6,6 +6,10 @@ import { StyleSheet } from '../../src/index.js';
 import StyleTester from './StyleTester.js';
 
 StyleSheet.rehydrate(window.renderedClassNames);
-ReactDOM.render(
-    <StyleTester />,
-    document.getElementById('root'));
+const root = document.getElementById('root');
+
+if (root !== null) {
+    ReactDOM.render(
+        <StyleTester />,
+        root);
+}
